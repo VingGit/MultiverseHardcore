@@ -1,56 +1,41 @@
 package me.lluiscamino.multiversehardcore;
 
-import com.onarandombox.MultiverseCore.MultiverseCore;
-import com.onarandombox.MultiverseCore.api.MVWorldManager;
 import me.lluiscamino.multiversehardcore.commands.HelpCommand;
 import me.lluiscamino.multiversehardcore.commands.MainCommand;
 import me.lluiscamino.multiversehardcore.events.PlayerChangeOfWorld;
 import me.lluiscamino.multiversehardcore.events.PlayerDeath;
 import me.lluiscamino.multiversehardcore.events.PlayerJoin;
 import me.lluiscamino.multiversehardcore.files.HardcoreWorldsList;
+import me.lluiscamino.multiversehardcore.utils.MV5WorldManagerFacade;
+import me.lluiscamino.multiversehardcore.utils.MVWorldManagerFacade;
 import me.lluiscamino.multiversehardcore.utils.MessageSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.JavaPluginLoader;
-
-import java.io.File;
+import org.mvplugins.multiverse.core.MultiverseCoreApi;
 
 public class MultiverseHardcore extends JavaPlugin {
 
     private static MultiverseHardcore instance;
-    private MVWorldManager MVWorldManager;
-    private final boolean testing;
-
-    public MultiverseHardcore() {
-        testing = false;
-    }
-
-    // Constructor needed for tests.
-    protected MultiverseHardcore(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
-        super(loader, description, dataFolder, file);
-        MVWorldManager = null;
-        testing = true;
-    }
+    private MVWorldManagerFacade mvWorldFacade;
 
     public static MultiverseHardcore getInstance() {
         return instance;
     }
 
-    public MVWorldManager getMVWorldManager() {
-        return MVWorldManager;
+    public MVWorldManagerFacade getMVWorldFacade() {
+        return mvWorldFacade;
     }
 
-    public void setMVWorldManager(MVWorldManager MVWorldManager) {
-        this.MVWorldManager = MVWorldManager;
+    public void setMVWorldFacade(MVWorldManagerFacade facade) {
+        this.mvWorldFacade = facade;
     }
 
     @Override
     public void onEnable() {
         instance = this;
-        if (!testing) {
+        // Skip if facade was already injected (test environment)
+        if (mvWorldFacade == null) {
             loadMultiverseCore();
         }
         saveDefaultConfig();
@@ -61,11 +46,12 @@ public class MultiverseHardcore extends JavaPlugin {
     }
 
     private void loadMultiverseCore() {
-        Plugin multiversePlugin = getServer().getPluginManager().getPlugin("Multiverse-Core");
-        if (multiversePlugin instanceof MultiverseCore) {
-            MVWorldManager = ((MultiverseCore) multiversePlugin).getMVWorldManager();
-        } else {
-            throw new RuntimeException("Multiverse-Core not found!");
+        try {
+            mvWorldFacade = new MV5WorldManagerFacade(MultiverseCoreApi.get().getWorldManager());
+        } catch (IllegalStateException e) {
+            getLogger().warning("Multiverse-Core not yet available during onEnable. " +
+                    "Ensure Multiverse-Core is listed as a dependency. " +
+                    "(In test environments inject via setMVWorldFacade.)");
         }
     }
 

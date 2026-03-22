@@ -119,7 +119,7 @@ public class HardcoreWorldConfiguration {
 
     @Override
     public String toString() {
-        String result = ChatColor.DARK_BLUE + world.getName() + ChatColor.BLUE + " info:\n" + ChatColor.RESET +
+        String result = ChatColor.DARK_BLUE + world.getName() + ChatColor.BLUE + " info:\n" +
                 ChatColor.BOLD + "- Start date: " + ChatColor.RESET + startDate + "\n" +
                 ChatColor.BOLD + "- Ban Duration: " + ChatColor.RESET
                 + (banForever ? "FOREVER" : banLength / 1000 + "s") + "\n" +

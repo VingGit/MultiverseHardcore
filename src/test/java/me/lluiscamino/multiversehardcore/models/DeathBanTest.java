@@ -1,9 +1,9 @@
 package me.lluiscamino.multiversehardcore.models;
 
-import be.seeseemelk.mockbukkit.MockBukkit;
-import be.seeseemelk.mockbukkit.ServerMock;
-import be.seeseemelk.mockbukkit.WorldMock;
-import be.seeseemelk.mockbukkit.entity.PlayerMock;
+import org.mockbukkit.mockbukkit.MockBukkit;
+import org.mockbukkit.mockbukkit.ServerMock;
+import org.mockbukkit.mockbukkit.world.WorldMock;
+import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import me.lluiscamino.multiversehardcore.MultiverseHardcore;
 import me.lluiscamino.multiversehardcore.exceptions.PlayerNotParticipatedException;
 import me.lluiscamino.multiversehardcore.exceptions.WorldIsNotHardcoreException;
@@ -27,7 +27,7 @@ public class DeathBanTest {
         MultiverseHardcore plugin = MockBukkit.load(MultiverseHardcore.class);
         MockMVWorldManager worldManager = new MockMVWorldManager(server);
         mockWorldCreator = new MockWorldCreator(server, worldManager);
-        plugin.setMVWorldManager(worldManager);
+        plugin.setMVWorldFacade(worldManager);
     }
 
     @After

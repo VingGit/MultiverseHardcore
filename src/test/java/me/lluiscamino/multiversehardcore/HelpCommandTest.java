@@ -1,8 +1,8 @@
 package me.lluiscamino.multiversehardcore;
 
-import be.seeseemelk.mockbukkit.MockBukkit;
-import be.seeseemelk.mockbukkit.ServerMock;
-import be.seeseemelk.mockbukkit.entity.PlayerMock;
+import org.mockbukkit.mockbukkit.MockBukkit;
+import org.mockbukkit.mockbukkit.ServerMock;
+import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import me.lluiscamino.multiversehardcore.commands.HelpCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.PluginCommand;
@@ -23,7 +23,7 @@ public class HelpCommandTest {
         server = MockBukkit.mock();
         MultiverseHardcore plugin = MockBukkit.load(MultiverseHardcore.class);
         MockMVWorldManager worldManager = new MockMVWorldManager(server);
-        plugin.setMVWorldManager(worldManager);
+        plugin.setMVWorldFacade(worldManager);
         if (command == null) command = MultiverseHardcore.getInstance().getCommand("mvhchelp");
     }
 
@@ -37,7 +37,7 @@ public class HelpCommandTest {
         String expectedMessage =
                 ChatColor.BOLD + "Available commands: " + ChatColor.RESET + "\n" +
                         ChatColor.BLUE + "/mvhc" + ChatColor.GREEN + " player" + ChatColor.RESET + "\n" +
-                        ChatColor.BLUE + "/mvhc" + ChatColor.GREEN + " world" + ChatColor.RESET;
+                        ChatColor.BLUE + "/mvhc" + ChatColor.GREEN + " world";
         PlayerMock player = server.addPlayer();
         helpCommand.onCommand(player, command, "", new String[]{});
         TestUtils.assertMessage(player, expectedMessage);
@@ -53,10 +53,10 @@ public class HelpCommandTest {
                         ChatColor.BLUE + "/mvhc" + ChatColor.GREEN + " makehc" + ChatColor.RED +
                         " <world>" + ChatColor.GOLD + " <spectator_mode> <ban_forever> <ban_length> " +
                         "<include_nether> <include_end> <respawn_world>" + ChatColor.RESET + "\n" +
-                        ChatColor.BLUE + "/mvhc" + ChatColor.GREEN + " player" + ChatColor.RESET + ChatColor.GOLD + " <world> <player>" + ChatColor.RESET + "\n" +
-                        ChatColor.BLUE + "/mvhc" + ChatColor.GREEN + " world" + ChatColor.RESET + ChatColor.GOLD + " <world>" + ChatColor.RESET + "\n" +
+                        ChatColor.BLUE + "/mvhc" + ChatColor.GREEN + " player" + ChatColor.GOLD + " <world> <player>" + ChatColor.RESET + "\n" +
+                        ChatColor.BLUE + "/mvhc" + ChatColor.GREEN + " world" + ChatColor.GOLD + " <world>" + ChatColor.RESET + "\n" +
                         ChatColor.BLUE + "/mvhc" + ChatColor.GREEN + " worlds" + ChatColor.RESET + "\n" +
-                        ChatColor.BLUE + "/mvhc" + ChatColor.GREEN + " unban" + ChatColor.RESET +
+                        ChatColor.BLUE + "/mvhc" + ChatColor.GREEN + " unban" +
                         ChatColor.RED + " <world> <player>" + ChatColor.RESET + "\n" +
                         ChatColor.BLUE + "/mvhc" + ChatColor.GREEN + " version" + ChatColor.RESET + "\n";
         PlayerMock op = TestUtils.addOP(server);

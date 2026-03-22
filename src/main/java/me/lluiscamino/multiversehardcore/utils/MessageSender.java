@@ -7,17 +7,17 @@ import org.jetbrains.annotations.NotNull;
 
 public final class MessageSender {
 
-    private static String formattedPrefix = ChatColor.DARK_RED + "[MV-HARDCORE] " + ChatColor.RESET;
+    private static String formattedPrefix = ChatColor.DARK_RED + "[MV-HARDCORE] ";
 
     private MessageSender() {
     }
 
     public static void setPrefix(String prefix) {
-        formattedPrefix = prefix + ChatColor.RESET;
+        formattedPrefix = prefix;
     }
 
     public static void sendError(@NotNull CommandSender user, @NotNull String message) {
-        user.sendMessage(formattedPrefix + ChatColor.RED + message + ChatColor.RESET);
+        user.sendMessage(formattedPrefix + ChatColor.RED + message);
     }
 
     public static void sendNormal(@NotNull CommandSender user, @NotNull String message) {
@@ -25,11 +25,11 @@ public final class MessageSender {
     }
 
     public static void sendInfo(@NotNull CommandSender user, @NotNull String message) {
-        user.sendMessage(formattedPrefix + ChatColor.BLUE + message + ChatColor.RESET);
+        user.sendMessage(formattedPrefix + ChatColor.BLUE + message);
     }
 
     public static void sendSuccess(@NotNull CommandSender user, @NotNull String message) {
-        user.sendMessage(formattedPrefix + ChatColor.GREEN + message + ChatColor.RESET);
+        user.sendMessage(formattedPrefix + ChatColor.GREEN + message);
     }
 
     public static void broadcast(@NotNull String message) {

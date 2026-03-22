@@ -1,9 +1,9 @@
 package me.lluiscamino.multiversehardcore;
 
-import be.seeseemelk.mockbukkit.MockBukkit;
-import be.seeseemelk.mockbukkit.ServerMock;
-import be.seeseemelk.mockbukkit.WorldMock;
-import be.seeseemelk.mockbukkit.entity.PlayerMock;
+import org.mockbukkit.mockbukkit.MockBukkit;
+import org.mockbukkit.mockbukkit.ServerMock;
+import org.mockbukkit.mockbukkit.world.WorldMock;
+import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import me.lluiscamino.multiversehardcore.exceptions.HardcoreWorldCreationException;
 import me.lluiscamino.multiversehardcore.models.HardcoreWorld;
 import me.lluiscamino.multiversehardcore.models.HardcoreWorldConfiguration;
@@ -28,7 +28,7 @@ public class WorldUtilsTest {
         MultiverseHardcore plugin = MockBukkit.load(MultiverseHardcore.class);
         MockMVWorldManager worldManager = new MockMVWorldManager(server);
         mockWorldCreator = new MockWorldCreator(server, worldManager);
-        plugin.setMVWorldManager(worldManager);
+        plugin.setMVWorldFacade(worldManager);
     }
 
     @After

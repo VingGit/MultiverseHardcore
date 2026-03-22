@@ -1,7 +1,6 @@
 package me.lluiscamino.multiversehardcore.commands.mainsubcommands;
 
-import com.onarandombox.MultiverseCore.api.MVWorldManager;
-import com.onarandombox.MultiverseCore.api.MultiverseWorld;
+import me.lluiscamino.multiversehardcore.utils.MVWorldManagerFacade;
 import me.lluiscamino.multiversehardcore.commands.HelpCommand;
 import me.lluiscamino.multiversehardcore.commands.MainSubcommand;
 import me.lluiscamino.multiversehardcore.exceptions.HardcoreWorldCreationException;
@@ -11,9 +10,7 @@ import me.lluiscamino.multiversehardcore.models.HardcoreWorldConfiguration;
 import me.lluiscamino.multiversehardcore.utils.MessageSender;
 import me.lluiscamino.multiversehardcore.utils.WorldUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.Difficulty;
 import org.bukkit.World;
-import org.bukkit.WorldType;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -87,11 +84,11 @@ public final class CreateHardcoreWorldSubcommand extends MainSubcommand {
     }
 
     private void handleHardcoreWorldCreationException(@NotNull HardcoreWorldCreationException exception) {
-        MVWorldManager worldManager = plugin.getMVWorldManager();
+        MVWorldManagerFacade facade = plugin.getMVWorldFacade();
         MessageSender.sendError(sender, exception.getMessage());
-        worldManager.deleteWorld(worldName);
-        if (createNether) worldManager.deleteWorld(worldName + "_nether");
-        if (createEnd) worldManager.deleteWorld(worldName + "_the_end");
+        facade.deleteWorld(worldName);
+        if (createNether) facade.deleteWorld(worldName + "_nether");
+        if (createEnd) facade.deleteWorld(worldName + "_the_end");
     }
 
     private HardcoreWorldConfiguration getConfigurationFromArgs() {
@@ -115,19 +112,19 @@ public final class CreateHardcoreWorldSubcommand extends MainSubcommand {
     }
 
     private boolean createNetherIfNecessary() {
-        MVWorldManager worldManager = plugin.getMVWorldManager();
+        MVWorldManagerFacade facade = plugin.getMVWorldFacade();
         if (createNether && !createHardcoreWorld(worldName + "_nether", World.Environment.NETHER)) {
-            worldManager.deleteWorld(worldName);
+            facade.deleteWorld(worldName);
             return false;
         }
         return true;
     }
 
     private boolean createEndIfNecessary() {
-        MVWorldManager worldManager = plugin.getMVWorldManager();
+        MVWorldManagerFacade facade = plugin.getMVWorldFacade();
         if (createEnd && !createHardcoreWorld(worldName + "_the_end", World.Environment.THE_END)) {
-            worldManager.deleteWorld(worldName);
-            if (createNether) worldManager.deleteWorld(worldName + "_nether");
+            facade.deleteWorld(worldName);
+            if (createNether) facade.deleteWorld(worldName + "_nether");
             return false;
         }
         return true;
@@ -145,22 +142,14 @@ public final class CreateHardcoreWorldSubcommand extends MainSubcommand {
 
     private void attemptWorldCreation(@NotNull String worldName, @NotNull World.Environment environment)
             throws HardcoreWorldCreationException {
-        MVWorldManager worldManager = plugin.getMVWorldManager();
-        HardcoreWorldCreationException worldCreationException =
-                new HardcoreWorldCreationException("World " + worldName + " could not be created");
-        try {
-            if (!worldManager.addWorld(worldName, environment, "", WorldType.NORMAL, true, "")) {
-                throw worldCreationException;
-            }
-        } catch (IllegalArgumentException e) {
-            throw worldCreationException;
+        MVWorldManagerFacade facade = plugin.getMVWorldFacade();
+        if (!facade.createWorld(worldName, environment)) {
+            throw new HardcoreWorldCreationException("World " + worldName + " could not be created");
         }
     }
 
     private void makeWorldAttributesHardcore(@NotNull String worldName) {
-        MVWorldManager worldManager = plugin.getMVWorldManager();
-        MultiverseWorld world = worldManager.getMVWorld(worldName);
-        world.setColor("DARKRED");
-        world.setDifficulty(Difficulty.HARD);
+        MVWorldManagerFacade facade = plugin.getMVWorldFacade();
+        facade.setWorldDifficulty(worldName, org.bukkit.Difficulty.HARD);
     }
 }

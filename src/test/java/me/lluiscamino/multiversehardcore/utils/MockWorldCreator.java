@@ -1,7 +1,7 @@
 package me.lluiscamino.multiversehardcore.utils;
 
-import be.seeseemelk.mockbukkit.ServerMock;
-import be.seeseemelk.mockbukkit.WorldMock;
+import org.mockbukkit.mockbukkit.ServerMock;
+import org.mockbukkit.mockbukkit.world.WorldMock;
 import me.lluiscamino.multiversehardcore.exceptions.HardcoreWorldCreationException;
 import me.lluiscamino.multiversehardcore.models.HardcoreWorld;
 import me.lluiscamino.multiversehardcore.models.HardcoreWorldConfiguration;

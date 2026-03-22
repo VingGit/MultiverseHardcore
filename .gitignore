@@ -1,3 +1,7 @@
 AGENTS.md
+SYSTEM_PROMPT.md
 nexus
 multiverse-core-src
+target/
+.idea/
+*.iml

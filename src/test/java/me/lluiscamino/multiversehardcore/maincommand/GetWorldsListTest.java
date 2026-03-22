@@ -1,8 +1,8 @@
 package me.lluiscamino.multiversehardcore.maincommand;
 
-import be.seeseemelk.mockbukkit.WorldMock;
-import be.seeseemelk.mockbukkit.command.ConsoleCommandSenderMock;
-import be.seeseemelk.mockbukkit.entity.PlayerMock;
+import org.mockbukkit.mockbukkit.world.WorldMock;
+import org.mockbukkit.mockbukkit.command.ConsoleCommandSenderMock;
+import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.bukkit.ChatColor;
 import org.junit.Test;
 import me.lluiscamino.multiversehardcore.utils.TestUtils;
@@ -13,9 +13,8 @@ public class GetWorldsListTest extends MainCommandTest {
     public void playerCannotSeeWorldsList() {
         String[] args = {"list"};
         PlayerMock player = server.addPlayer();
-        String expectedMessage = ChatColor.DARK_RED + "[MV-HARDCORE] " + ChatColor.RESET
-                + ChatColor.RED + "You need the following permission to run this command: multiversehardcore.list"
-                + ChatColor.RESET;
+        String expectedMessage = ChatColor.DARK_RED + "[MV-HARDCORE] "
+                + ChatColor.RED + "You need the following permission to run this command: multiversehardcore.list";
         mainCommand.onCommand(player, command, "", args);
         TestUtils.assertMessage(player, expectedMessage);
     }
@@ -23,8 +22,8 @@ public class GetWorldsListTest extends MainCommandTest {
     @Test
     public void OPCanSeeEmptyWorldsList() {
         String[] args = {"list"};
-        String expectedMessage = ChatColor.DARK_RED + "[MV-HARDCORE] " + ChatColor.RESET
-                + ChatColor.BLUE + "Worlds list: " + ChatColor.RESET;
+        String expectedMessage = ChatColor.DARK_RED + "[MV-HARDCORE] "
+                + ChatColor.BLUE + "Worlds list: ";
         PlayerMock op = TestUtils.addOP(server);
         mainCommand.onCommand(op, command, "", args);
         TestUtils.assertMessage(op, expectedMessage);
@@ -33,8 +32,8 @@ public class GetWorldsListTest extends MainCommandTest {
     @Test
     public void consoleCanSeeEmptyWorldsList() {
         String[] args = {"list"};
-        String expectedMessage = ChatColor.DARK_RED + "[MV-HARDCORE] " + ChatColor.RESET
-                + ChatColor.BLUE + "Worlds list: " + ChatColor.RESET;
+        String expectedMessage = ChatColor.DARK_RED + "[MV-HARDCORE] "
+                + ChatColor.BLUE + "Worlds list: ";
         ConsoleCommandSenderMock console = new ConsoleCommandSenderMock();
         mainCommand.onCommand(console, command, "", args);
         TestUtils.assertMessage(console, expectedMessage);
@@ -45,7 +44,7 @@ public class GetWorldsListTest extends MainCommandTest {
         String worldName = "hardcore_world";
         String[] args = {"list"};
         String[] expectedMessages = {
-                ChatColor.DARK_RED + "[MV-HARDCORE] " + ChatColor.RESET + ChatColor.BLUE + "Worlds list: " + ChatColor.RESET,
+                ChatColor.DARK_RED + "[MV-HARDCORE] " + ChatColor.BLUE + "Worlds list: ",
                 worldName + "\n"
         };
         PlayerMock op = TestUtils.addOP(server);
@@ -61,7 +60,7 @@ public class GetWorldsListTest extends MainCommandTest {
         String worldName = world.getName();
         String[] args = {"list"};
         String[] expectedMessages = {
-                ChatColor.DARK_RED + "[MV-HARDCORE] " + ChatColor.RESET + ChatColor.BLUE + "Worlds list: " + ChatColor.RESET,
+                ChatColor.DARK_RED + "[MV-HARDCORE] " + ChatColor.BLUE + "Worlds list: ",
                 worldName + "\n" +
                         "\t" + worldName + "_nether\n" +
                         "\t" + worldName + "_the_end\n"

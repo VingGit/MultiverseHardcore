@@ -1,7 +1,5 @@
 package me.lluiscamino.multiversehardcore.utils;
 
-import com.onarandombox.MultiverseCore.api.MVWorldManager;
-import com.onarandombox.MultiverseCore.api.MultiverseWorld;
 import me.lluiscamino.multiversehardcore.MultiverseHardcore;
 import me.lluiscamino.multiversehardcore.exceptions.PlayerNotParticipatedException;
 import me.lluiscamino.multiversehardcore.exceptions.PlayerParticipationAlreadyExistsException;
@@ -9,6 +7,7 @@ import me.lluiscamino.multiversehardcore.exceptions.WorldIsNotHardcoreException;
 import me.lluiscamino.multiversehardcore.models.HardcoreWorld;
 import me.lluiscamino.multiversehardcore.models.PlayerParticipation;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -70,7 +69,8 @@ public final class WorldUtils {
                 getLogger().warning("Respawn world does not exist!");
                 return false;
             }
-            return player.teleport(respawnWorld.getSpawnLocation());
+            Location spawnLoc = respawnWorld.getSpawnLocation();
+            return player.teleport(spawnLoc);
         } catch (WorldIsNotHardcoreException e) {
             return false; // This cannot happen. If player is not in a hardcore world, this function will not be called.
         }
@@ -159,9 +159,8 @@ public final class WorldUtils {
     }
 
     private static GameMode getDefaultGameMode(World world) {
-        MVWorldManager worldManager = MultiverseHardcore.getInstance().getMVWorldManager();
-        MultiverseWorld multiverseWorld = worldManager.getMVWorld(world);
-        return multiverseWorld.getGameMode();
+        MVWorldManagerFacade facade = MultiverseHardcore.getInstance().getMVWorldFacade();
+        return facade.getDefaultGameMode(world);
     }
 
     private static void setGameModeBackToDefaultIfNecessary(Player player, World world) {

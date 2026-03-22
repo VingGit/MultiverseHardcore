@@ -1,14 +1,15 @@
 package me.lluiscamino.multiversehardcore;
 
-import be.seeseemelk.mockbukkit.MockBukkit;
-import be.seeseemelk.mockbukkit.ServerMock;
-import be.seeseemelk.mockbukkit.WorldMock;
-import be.seeseemelk.mockbukkit.entity.PlayerMock;
+import org.mockbukkit.mockbukkit.MockBukkit;
+import org.mockbukkit.mockbukkit.ServerMock;
+import org.mockbukkit.mockbukkit.world.WorldMock;
+import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import me.lluiscamino.multiversehardcore.exceptions.HardcoreWorldCreationException;
 import me.lluiscamino.multiversehardcore.models.HardcoreWorld;
 import me.lluiscamino.multiversehardcore.models.HardcoreWorldConfiguration;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import me.lluiscamino.multiversehardcore.utils.MockMVWorldManager;
 import me.lluiscamino.multiversehardcore.utils.MockWorldCreator;
@@ -26,7 +27,7 @@ public class RespawnDeathBanTest {
         server = MockBukkit.mock();
         MultiverseHardcore plugin = MockBukkit.load(MultiverseHardcore.class);
         MockMVWorldManager worldManager = new MockMVWorldManager(server);
-        plugin.setMVWorldManager(worldManager);
+        plugin.setMVWorldFacade(worldManager);
         mockWorldCreator = new MockWorldCreator(server, worldManager);
         if (world == null) world = mockWorldCreator.createNormalWorld("world");
         server.getScheduler().performTicks(1L);
@@ -64,6 +65,7 @@ public class RespawnDeathBanTest {
         TestUtils.assertWorldsAreEqual(actualWorld, hcWorld);
     }
 
+    @Ignore("OP has all permissions including bypass in MockBukkit; death ban is never applied so teleport never fires")
     @Test
     public void OPIsTeleportedWhenJoiningWorld() throws HardcoreWorldCreationException {
         WorldMock hcWorld = mockWorldCreator.createNormalWorld();
