@@ -24,12 +24,10 @@ public class PlayerDeath implements Listener {
             Player player = event.getEntity();
             World world = getDeathBanWorld(player);
             String bypass = "multiversehardcore.bypass." + world.getName();
-            boolean explicitBypass = player.getEffectivePermissions().stream()
-                    .anyMatch(p -> p.getPermission().equalsIgnoreCase(bypass)
-                            && p.getAttachment() != null
-                            && p.getValue());
-            if (explicitBypass) {
-                return; // only bypass if explicitly granted via a permission plugin (not raw OP)
+            // isPermissionSet returns false for raw OP (unregistered bypass perm not in map);
+            // it only returns true when a permission plugin like LuckPerms explicitly grants it.
+            if (player.isPermissionSet(bypass) && player.hasPermission(bypass)) {
+                return;
             }
             PlayerParticipation participation = new PlayerParticipation(player, world);
             participation.addDeathBan(new Date(), event.getDeathMessage());
