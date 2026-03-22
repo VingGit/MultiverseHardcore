@@ -47,7 +47,16 @@ public class PlayerRespawn implements Listener {
                 PlayerParticipation participation = new PlayerParticipation(player, world);
                 log.info("[DEBUG] respawn-enforce: isBanned=" + participation.isDeathBanned()
                         + " spectatorMode=" + participation.getHcWorld().getConfiguration().isSpectatorMode());
-                if (!participation.isDeathBanned()) return;
+                if (!participation.isDeathBanned()) {
+                    // Player was unbanned while on the death screen; vanilla may have
+                    // respawned them in SPECTATOR (using the mode we set while they
+                    // were dead). Restore SURVIVAL so they can play normally.
+                    if (player.getGameMode() == GameMode.SPECTATOR) {
+                        player.setGameMode(GameMode.SURVIVAL);
+                        log.info("[DEBUG] respawn-enforce: not banned but in SPECTATOR → restored SURVIVAL for " + player.getName());
+                    }
+                    return;
+                }
 
                 if (participation.getHcWorld().getConfiguration().isSpectatorMode()) {
                     player.setGameMode(GameMode.SPECTATOR);

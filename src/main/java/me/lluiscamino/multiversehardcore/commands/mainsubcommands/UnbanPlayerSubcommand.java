@@ -79,8 +79,14 @@ public final class UnbanPlayerSubcommand extends MainSubcommand {
 
     private void setPlayerGameModeToSurvivalIfNeeded(@NotNull World world) {
         World normalWorld = WorldUtils.getNormalWorld(player.getWorld());
-        if (player.isOnline() && normalWorld.equals(world)) {
-            player.setGameMode(GameMode.SURVIVAL);
-        }
+        if (!player.isOnline() || !normalWorld.equals(world)) return;
+        // Schedule one tick later so our task lands after any pending enforce-task
+        // that may still be queued in the scheduler (e.g. the 2-tick respawn task).
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+            if (player.getGameMode() == GameMode.SPECTATOR) {
+                player.setGameMode(GameMode.SURVIVAL);
+                MessageSender.sendNormal(player, "You are entering a HARDCORE world, be careful!");
+            }
+        }, 1L);
     }
 }
