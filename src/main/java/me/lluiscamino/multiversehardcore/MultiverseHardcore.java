@@ -6,6 +6,7 @@ import me.lluiscamino.multiversehardcore.commands.MainCommandTabCompleter;
 import me.lluiscamino.multiversehardcore.events.PlayerChangeOfWorld;
 import me.lluiscamino.multiversehardcore.events.PlayerDeath;
 import me.lluiscamino.multiversehardcore.events.PlayerJoin;
+import me.lluiscamino.multiversehardcore.events.PlayerRespawn;
 import me.lluiscamino.multiversehardcore.files.HardcoreWorldsList;
 import me.lluiscamino.multiversehardcore.utils.MV5WorldManagerFacade;
 import me.lluiscamino.multiversehardcore.utils.MVWorldManagerFacade;
@@ -64,7 +65,7 @@ public class MultiverseHardcore extends JavaPlugin {
     }
 
     private void loadEventListeners() {
-        Listener[] listeners = {new PlayerDeath(), new PlayerChangeOfWorld(), new PlayerJoin()};
+        Listener[] listeners = {new PlayerDeath(), new PlayerChangeOfWorld(), new PlayerJoin(), new PlayerRespawn()};
         for (Listener listener : listeners) {
             loadEventListener(listener);
         }
