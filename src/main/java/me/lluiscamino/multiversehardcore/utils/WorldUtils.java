@@ -4,6 +4,8 @@ import me.lluiscamino.multiversehardcore.MultiverseHardcore;
 import me.lluiscamino.multiversehardcore.exceptions.PlayerNotParticipatedException;
 import me.lluiscamino.multiversehardcore.exceptions.PlayerParticipationAlreadyExistsException;
 import me.lluiscamino.multiversehardcore.exceptions.WorldIsNotHardcoreException;
+import me.lluiscamino.multiversehardcore.files.PlayersList;
+import me.lluiscamino.multiversehardcore.models.DeathBan;
 import me.lluiscamino.multiversehardcore.models.HardcoreWorld;
 import me.lluiscamino.multiversehardcore.models.PlayerParticipation;
 import org.bukkit.GameMode;
@@ -158,11 +160,13 @@ public final class WorldUtils {
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             // Re-check: the player may have been unbanned (e.g. /mvhc unban run from
             // the death screen) between the death event and when this task fires.
+            // Use PlayersList directly (players.yml only) to avoid requiring worlds.yml
+            // to still contain the HC world entry (e.g. after cleanWorlds() has run).
             try {
-                PlayerParticipation current = new PlayerParticipation(player, world);
-                if (!current.isDeathBanned()) return;
-            } catch (PlayerNotParticipatedException | WorldIsNotHardcoreException e) {
-                return; // world no longer HC or participation gone — nothing to enforce
+                DeathBan[] bans = PlayersList.instance.getPlayerDeathBans(player, world);
+                if (bans.length == 0 || !bans[bans.length - 1].isActive()) return;
+            } catch (PlayerNotParticipatedException e) {
+                return; // participation gone — nothing to enforce
             }
             if (hcWorld.getConfiguration().isSpectatorMode()) {
                 player.setGameMode(GameMode.SPECTATOR);

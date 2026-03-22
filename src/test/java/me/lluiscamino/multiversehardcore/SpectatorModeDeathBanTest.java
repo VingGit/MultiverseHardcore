@@ -31,6 +31,10 @@ public class SpectatorModeDeathBanTest {
         MockMVWorldManager worldManager = new MockMVWorldManager(server);
         plugin.setMVWorldFacade(worldManager);
         mockWorldCreator = new MockWorldCreator(server, worldManager);
+        // Consume the cleanWorlds tick (clean_worlds_ticks=1) before any HC worlds are
+        // created, so it does not fire during killPlayer's performTicks(2L) and
+        // incorrectly wipe the HC world / player ban data via a stale server reference.
+        server.getScheduler().performTicks(1L);
     }
 
     @After
