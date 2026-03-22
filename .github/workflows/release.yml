@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write   # needed to create GitHub releases
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Build and test
+        run: mvn --batch-mode package
+
+      - name: Derive artifact name
+        id: artifact
+        # pom version == tag without leading "v"  →  MultiverseHardcore-<version>.jar
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "jar=target/MultiverseHardcore-${VERSION}.jar" >> "$GITHUB_OUTPUT"
+          echo "name=MultiverseHardcore-${VERSION}.jar"       >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: "MultiverseHardcore ${{ github.ref_name }}"
+          generate_release_notes: true
+          files: ${{ steps.artifact.outputs.jar }}
+
