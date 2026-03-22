@@ -82,12 +82,17 @@ public final class WorldUtils {
         try {
             Player player = event instanceof PlayerEvent ? ((PlayerEvent) event).getPlayer() : ((PlayerDeathEvent) event).getEntity();
             World world = getNormalWorld(player.getWorld());
+            getLogger().info("[DEBUG] handlePlayerEnterWorld: player=" + player.getName()
+                    + " event=" + event.getClass().getSimpleName()
+                    + " world=" + world.getName() + " isHC=" + worldIsHardcore(world));
             if (!worldIsHardcore(world)) {
                 setGameModeBackToDefaultIfNecessary(player, world);
                 return;
             }
             addPlayerParticipationIfNotExists(player, world);
             PlayerParticipation participation = new PlayerParticipation(player, world);
+            getLogger().info("[DEBUG] handlePlayerEnterWorld: isBanned=" + participation.isDeathBanned()
+                    + " gameMode=" + player.getGameMode());
             if (participation.isDeathBanned()) {
                 sendYouCantPlayMessage(participation);
                 preventPlayerEnterWorld(participation);
@@ -96,6 +101,7 @@ public final class WorldUtils {
                 // restore directly to SURVIVAL rather than delegating to Multiverse's
                 // configured game mode (which may not be SURVIVAL).
                 if (player.getGameMode() == GameMode.SPECTATOR) {
+                    getLogger().info("[DEBUG] handlePlayerEnterWorld: not banned, restoring SURVIVAL for " + player.getName());
                     player.setGameMode(GameMode.SURVIVAL);
                 }
                 sendEnteringWorldMessage(player);
@@ -162,14 +168,22 @@ public final class WorldUtils {
             // the death screen) between the death event and when this task fires.
             // Use PlayersList directly (players.yml only) to avoid requiring worlds.yml
             // to still contain the HC world entry (e.g. after cleanWorlds() has run).
+            getLogger().info("[DEBUG] enforce-task fired: player=" + player.getName()
+                    + " world=" + world.getName() + " gameModeNow=" + player.getGameMode());
             try {
                 DeathBan[] bans = PlayersList.instance.getPlayerDeathBans(player, world);
-                if (bans.length == 0 || !bans[bans.length - 1].isActive()) return;
+                boolean active = bans.length > 0 && bans[bans.length - 1].isActive();
+                getLogger().info("[DEBUG] enforce-task re-check: bans=" + bans.length + " active=" + active);
+                if (!active) return;
             } catch (PlayerNotParticipatedException e) {
+                getLogger().info("[DEBUG] enforce-task re-check: PlayerNotParticipated – aborting");
                 return; // participation gone — nothing to enforce
             }
-            if (hcWorld.getConfiguration().isSpectatorMode()) {
+            boolean spectator = hcWorld.getConfiguration().isSpectatorMode();
+            getLogger().info("[DEBUG] enforce-task: spectatorMode=" + spectator + ", acting on " + player.getName());
+            if (spectator) {
                 player.setGameMode(GameMode.SPECTATOR);
+                getLogger().info("[DEBUG] enforce-task: gameMode set → " + player.getGameMode());
             } else {
                 respawnPlayer(player);
             }

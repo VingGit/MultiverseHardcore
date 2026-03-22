@@ -1,5 +1,6 @@
 package me.lluiscamino.multiversehardcore.events;
 
+import me.lluiscamino.multiversehardcore.MultiverseHardcore;
 import me.lluiscamino.multiversehardcore.exceptions.PlayerNotParticipatedException;
 import me.lluiscamino.multiversehardcore.exceptions.WorldIsNotHardcoreException;
 import me.lluiscamino.multiversehardcore.models.DeathBan;
@@ -15,26 +16,34 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 import java.util.Date;
+import java.util.logging.Logger;
 
 public class PlayerDeath implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onDeath(PlayerDeathEvent event) {
+        Logger log = MultiverseHardcore.getInstance().getLogger();
         try {
             Player player = event.getEntity();
+            log.info("[DEBUG] onDeath: " + player.getName() + " died in world=" + player.getWorld().getName());
             World world = getDeathBanWorld(player);
+            log.info("[DEBUG] onDeath: ban-world resolved to=" + world.getName());
             String bypass = "multiversehardcore.bypass." + world.getName();
-            // isPermissionSet returns false for raw OP (unregistered bypass perm not in map);
-            // it only returns true when a permission plugin like LuckPerms explicitly grants it.
             if (player.isPermissionSet(bypass) && player.hasPermission(bypass)) {
+                log.info("[DEBUG] onDeath: " + player.getName() + " has bypass perm, skipping ban");
                 return;
             }
             PlayerParticipation participation = new PlayerParticipation(player, world);
             participation.addDeathBan(new Date(), event.getDeathMessage());
+            log.info("[DEBUG] onDeath: ban recorded for " + player.getName() + " in " + world.getName()
+                    + ", totalDeaths=" + participation.getNumDeathBans());
             sendPlayerDiedMessage(participation);
             player.setHealth(20);
+            log.info("[DEBUG] onDeath: health restored, calling handlePlayerEnterWorld"
+                    + " (player.world=" + player.getWorld().getName() + ")");
             WorldUtils.handlePlayerEnterWorld(event);
-        } catch (PlayerNotParticipatedException | WorldIsNotHardcoreException ignored) {
+        } catch (PlayerNotParticipatedException | WorldIsNotHardcoreException e) {
+            log.info("[DEBUG] onDeath: caught " + e.getClass().getSimpleName() + ": " + e.getMessage());
         }
     }
 
