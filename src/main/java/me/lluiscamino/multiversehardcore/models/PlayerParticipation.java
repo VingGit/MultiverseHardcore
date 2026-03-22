@@ -91,7 +91,8 @@ public class PlayerParticipation {
     }
 
     private boolean isImmuneToDeathBan() {
-        return player.hasPermission("multiversehardcore.bypass." + hcWorld.getConfiguration().getWorld().getName());
+        String bypass = "multiversehardcore.bypass." + hcWorld.getConfiguration().getWorldName();
+        return player.isPermissionSet(bypass) && player.hasPermission(bypass);
     }
 
     private void reloadDeathBans() {

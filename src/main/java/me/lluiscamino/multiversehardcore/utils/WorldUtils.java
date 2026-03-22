@@ -90,7 +90,12 @@ public final class WorldUtils {
                 sendYouCantPlayMessage(participation);
                 preventPlayerEnterWorld(participation);
             } else {
-                setGameModeBackToDefaultIfNecessary(player, world);
+                // Our plugin may have set this player to SPECTATOR on death;
+                // restore directly to SURVIVAL rather than delegating to Multiverse's
+                // configured game mode (which may not be SURVIVAL).
+                if (player.getGameMode() == GameMode.SPECTATOR) {
+                    player.setGameMode(GameMode.SURVIVAL);
+                }
                 sendEnteringWorldMessage(player);
             }
         } catch (PlayerNotParticipatedException | WorldIsNotHardcoreException ignored) {
