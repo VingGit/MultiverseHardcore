@@ -1,6 +1,6 @@
 name: MultiverseHardcore
 version: 1.0.3
-api-version: "1.15"
+api-version: "1.21"
 main: me.lluiscamino.multiversehardcore.MultiverseHardcore
 commands:
   mvhc:
