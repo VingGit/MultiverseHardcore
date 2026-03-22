@@ -10,7 +10,7 @@ import me.lluiscamino.multiversehardcore.models.HardcoreWorldConfiguration;
 import org.bukkit.GameMode;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 import me.lluiscamino.multiversehardcore.utils.MockMVWorldManager;
 import me.lluiscamino.multiversehardcore.utils.MockWorldCreator;
