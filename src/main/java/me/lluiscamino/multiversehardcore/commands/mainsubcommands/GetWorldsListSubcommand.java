@@ -34,7 +34,8 @@ public class GetWorldsListSubcommand extends MainSubcommand {
     }
 
     private void appendWorldInfo(@NotNull StringBuilder worldsListMessage, @NotNull HardcoreWorld hcWorld) {
-        String worldName = hcWorld.getConfiguration().getWorld().getName();
+        String worldName = hcWorld.getConfiguration().getWorldName();
+        if (worldName == null) return;
         worldsListMessage.append(worldName);
         worldsListMessage.append("\n");
         if (hcWorld.getConfiguration().hasNether()) {

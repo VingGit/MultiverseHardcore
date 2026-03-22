@@ -10,7 +10,6 @@ import me.lluiscamino.multiversehardcore.models.HardcoreWorldConfiguration;
 import org.bukkit.GameMode;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import me.lluiscamino.multiversehardcore.utils.MockMVWorldManager;
@@ -47,16 +46,6 @@ public class SpectatorModeDeathBanTest {
         Assert.assertEquals(GameMode.SPECTATOR, player.getGameMode());
     }
 
-    @Test
-    public void testGameModeIsNotSetToSpectatorWhenJoiningWorldOP() throws HardcoreWorldCreationException {
-        WorldMock world = mockWorldCreator.createNormalWorld();
-        HardcoreWorld.createHardcoreWorld(new HardcoreWorldConfiguration(world, null, new Date(), true, 0, true, true, true));
-        PlayerMock player = TestUtils.addOP(server);
-        TestUtils.killPlayer(server, player);
-        Assert.assertEquals(GameMode.SURVIVAL, player.getGameMode());
-    }
-
-    @Ignore("OP has all permissions including bypass in MockBukkit; cannot unset default:false permissions in test suite")
     @Test
     public void testGameModeIsSetToSpectatorWhenJoiningWorldOP() throws HardcoreWorldCreationException {
         WorldMock world = mockWorldCreator.createNormalWorld();

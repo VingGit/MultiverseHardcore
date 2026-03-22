@@ -8,8 +8,7 @@ import me.lluiscamino.multiversehardcore.exceptions.HardcoreWorldCreationExcepti
 import me.lluiscamino.multiversehardcore.models.HardcoreWorld;
 import me.lluiscamino.multiversehardcore.models.HardcoreWorldConfiguration;
 import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.Assert;
 import org.junit.Test;
 import me.lluiscamino.multiversehardcore.utils.MockMVWorldManager;
 import me.lluiscamino.multiversehardcore.utils.MockWorldCreator;
@@ -65,7 +64,6 @@ public class RespawnDeathBanTest {
         TestUtils.assertWorldsAreEqual(actualWorld, hcWorld);
     }
 
-    @Ignore("OP has all permissions including bypass in MockBukkit; death ban is never applied so teleport never fires")
     @Test
     public void OPIsTeleportedWhenJoiningWorld() throws HardcoreWorldCreationException {
         WorldMock hcWorld = mockWorldCreator.createNormalWorld();

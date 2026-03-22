@@ -10,6 +10,7 @@ import java.util.*;
 
 public class HardcoreWorldConfiguration {
     private final World world;
+    private final String worldName;
     private final World spawnWorld;
     private final Date startDate;
     private final boolean banForever;
@@ -22,6 +23,7 @@ public class HardcoreWorldConfiguration {
                                       boolean banForever, long banLength, boolean spectatorMode,
                                       boolean includeNether, boolean includeEnd) {
         this.world = world;
+        this.worldName = world != null ? world.getName() : null;
         this.spawnWorld = spawnWorld;
         this.startDate = startDate;
         this.banForever = banForever;
@@ -34,6 +36,7 @@ public class HardcoreWorldConfiguration {
     public HardcoreWorldConfiguration(@NotNull String worldName, @NotNull Map<String, Object> worldConfig) throws IllegalArgumentException {
         if (!worldConfigMapIsValid(worldConfig))
             throw new IllegalArgumentException("World config for map " + worldName + " is not valid");
+        this.worldName = worldName;
         this.world = MultiverseHardcore.getInstance().getServer().getWorld(worldName);
         this.spawnWorld = MultiverseHardcore.getInstance().getServer().getWorld((String) worldConfig.get("respawn_world"));
         this.startDate = new Date(Long.parseLong((String) worldConfig.get("start_date")));
@@ -46,6 +49,10 @@ public class HardcoreWorldConfiguration {
 
     public World getWorld() {
         return world;
+    }
+
+    public String getWorldName() {
+        return worldName != null ? worldName : (world != null ? world.getName() : null);
     }
 
     public World getSpawnWorld() {
@@ -119,7 +126,7 @@ public class HardcoreWorldConfiguration {
 
     @Override
     public String toString() {
-        String result = ChatColor.DARK_BLUE + world.getName() + ChatColor.BLUE + " info:\n" +
+        String result = ChatColor.DARK_BLUE + getWorldName() + ChatColor.BLUE + " info:\n" +
                 ChatColor.BOLD + "- Start date: " + ChatColor.RESET + startDate + "\n" +
                 ChatColor.BOLD + "- Ban Duration: " + ChatColor.RESET
                 + (banForever ? "FOREVER" : banLength / 1000 + "s") + "\n" +
