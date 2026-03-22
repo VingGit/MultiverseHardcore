@@ -153,8 +153,17 @@ public final class WorldUtils {
         int enterWorldTicks = getConfig().getInt("enter_world_ticks");
         HardcoreWorld hcWorld = participation.getHcWorld();
         Player player = participation.getPlayer();
+        World world = participation.getWorld();
         MultiverseHardcore plugin = MultiverseHardcore.getInstance();
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+            // Re-check: the player may have been unbanned (e.g. /mvhc unban run from
+            // the death screen) between the death event and when this task fires.
+            try {
+                PlayerParticipation current = new PlayerParticipation(player, world);
+                if (!current.isDeathBanned()) return;
+            } catch (PlayerNotParticipatedException | WorldIsNotHardcoreException e) {
+                return; // world no longer HC or participation gone — nothing to enforce
+            }
             if (hcWorld.getConfiguration().isSpectatorMode()) {
                 player.setGameMode(GameMode.SPECTATOR);
             } else {
