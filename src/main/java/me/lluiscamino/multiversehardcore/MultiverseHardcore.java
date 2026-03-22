@@ -2,6 +2,7 @@ package me.lluiscamino.multiversehardcore;
 
 import me.lluiscamino.multiversehardcore.commands.HelpCommand;
 import me.lluiscamino.multiversehardcore.commands.MainCommand;
+import me.lluiscamino.multiversehardcore.commands.MainCommandTabCompleter;
 import me.lluiscamino.multiversehardcore.events.PlayerChangeOfWorld;
 import me.lluiscamino.multiversehardcore.events.PlayerDeath;
 import me.lluiscamino.multiversehardcore.events.PlayerJoin;
@@ -78,6 +79,7 @@ public class MultiverseHardcore extends JavaPlugin {
         PluginCommand helpCommand = getCommand("mvhchelp");
         if (mainCommand != null && helpCommand != null) {
             mainCommand.setExecutor(new MainCommand());
+            mainCommand.setTabCompleter(new MainCommandTabCompleter());
             helpCommand.setExecutor(new HelpCommand());
         } else {
             throw new RuntimeException("Multiverse-Hardcore Command not found!");

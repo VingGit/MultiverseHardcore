@@ -47,12 +47,15 @@ public class HelpCommandTest {
     public void helpDialogIsCorrectAsOP() {
         String expectedMessage =
                 ChatColor.BOLD + "Available commands: " + ChatColor.RESET + "\n" +
-                        ChatColor.BLUE + "/mvhc" + ChatColor.GREEN + " create" + ChatColor.RED
-                        + " <world>" + ChatColor.GOLD + " <spectator_mode> <create_nether> <create_end> <ban_forever> " +
-                        "<ban_length> <include_nether> <include_end> <respawn_world>" + ChatColor.RESET + "\n" +
-                        ChatColor.BLUE + "/mvhc" + ChatColor.GREEN + " makehc" + ChatColor.RED +
-                        " <world>" + ChatColor.GOLD + " <spectator_mode> <ban_forever> <ban_length> " +
-                        "<include_nether> <include_end> <respawn_world>" + ChatColor.RESET + "\n" +
+                        ChatColor.BLUE + "/mvhc" + ChatColor.GREEN + " create"
+                        + ChatColor.RED + " <world>"
+                        + ChatColor.GRAY + " spectator:[true|false] nether:[true|false] end:[true|false]"
+                        + " forever:[true|false] ban_seconds:<n> inc_nether:[true|false] inc_end:[true|false]"
+                        + " respawn:<world>" + ChatColor.RESET + "\n" +
+                        ChatColor.BLUE + "/mvhc" + ChatColor.GREEN + " makehc"
+                        + ChatColor.RED + " <world>"
+                        + ChatColor.GRAY + " spectator:[true|false] forever:[true|false] ban_seconds:<n>"
+                        + " inc_nether:[true|false] inc_end:[true|false] respawn:<world>" + ChatColor.RESET + "\n" +
                         ChatColor.BLUE + "/mvhc" + ChatColor.GREEN + " player" + ChatColor.GOLD + " <world> <player>" + ChatColor.RESET + "\n" +
                         ChatColor.BLUE + "/mvhc" + ChatColor.GREEN + " world" + ChatColor.GOLD + " <world>" + ChatColor.RESET + "\n" +
                         ChatColor.BLUE + "/mvhc" + ChatColor.GREEN + " worlds" + ChatColor.RESET + "\n" +
