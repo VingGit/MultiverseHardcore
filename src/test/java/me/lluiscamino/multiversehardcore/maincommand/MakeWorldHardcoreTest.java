@@ -23,8 +23,9 @@ public class MakeWorldHardcoreTest extends MainCommandTest {
         String[] args = {"makehc"};
         String expectedMessage = ChatColor.DARK_RED + "[MV-HARDCORE] "
                 + ChatColor.RED + "Wrong usage: " + ChatColor.BLUE + "/mvhc" + ChatColor.GREEN + " makehc"
-                + ChatColor.RED + " <world>" + ChatColor.GOLD + " <spectator_mode> <ban_forever> " +
-                "<ban_length> <include_nether> <include_end> <respawn_world>";
+                + ChatColor.RED + " <world>"
+                + ChatColor.GRAY + " spectator:[true|false] forever:[true|false] ban_seconds:<n>"
+                + " inc_nether:[true|false] inc_end:[true|false] respawn:<world>";
         PlayerMock player = TestUtils.addOP(server);
         mainCommand.onCommand(player, command, "", args);
         TestUtils.assertMessage(player, expectedMessage);
