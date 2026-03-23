@@ -38,10 +38,12 @@ public class PlayerDeath implements Listener {
             log.info("[DEBUG] onDeath: ban recorded for " + player.getName() + " in " + world.getName()
                     + ", totalDeaths=" + participation.getNumDeathBans());
             sendPlayerDiedMessage(participation);
-            player.setHealth(20);
-            log.info("[DEBUG] onDeath: health restored, calling handlePlayerEnterWorld"
-                    + " (player.world=" + player.getWorld().getName() + ")");
-            WorldUtils.handlePlayerEnterWorld(event);
+            // Do NOT call setHealth(20) or handlePlayerEnterWorld here.
+            // Reviving the player server-side while the client shows the death screen
+            // causes the Respawn button to fail on first click and creates a persistent
+            // client/server desync that survives until relog.
+            // Enforcement (SPECTATOR or respawn-world teleport) is handled by
+            // PlayerRespawn.onPlayerRespawn after the player naturally clicks Respawn.
         } catch (PlayerNotParticipatedException | WorldIsNotHardcoreException e) {
             log.info("[DEBUG] onDeath: caught " + e.getClass().getSimpleName() + ": " + e.getMessage());
         }

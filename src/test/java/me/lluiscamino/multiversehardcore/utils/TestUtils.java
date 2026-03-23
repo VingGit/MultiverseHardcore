@@ -2,6 +2,7 @@ package me.lluiscamino.multiversehardcore.utils;
 
 import me.lluiscamino.multiversehardcore.MultiverseHardcore;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.permissions.PermissionAttachment;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
@@ -59,6 +60,13 @@ public final class TestUtils {
 
     public static void killPlayer(@NotNull ServerMock server, @NotNull PlayerMock player) {
         player.setHealth(0);
+        // Simulate the player clicking "Respawn" on the death screen.
+        // Our PlayerRespawn listener then schedules the enforce-task
+        // (enter_world_ticks = 2) so it fires during performTicks below.
+        PlayerRespawnEvent respawnEvent = new PlayerRespawnEvent(
+                player, player.getLocation(), false, false, false,
+                PlayerRespawnEvent.RespawnReason.DEATH);
+        server.getPluginManager().callEvent(respawnEvent);
         // MockBukkit sets alive=false after PlayerDeathEvent but does not restore it via
         // setHealth(). Force alive=true before performTicks so that player.teleport() inside
         // the scheduled ban-enforcement task (enter_world_ticks = 2) succeeds.

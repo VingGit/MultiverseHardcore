@@ -4,6 +4,7 @@ import me.lluiscamino.multiversehardcore.MultiverseHardcore;
 import me.lluiscamino.multiversehardcore.exceptions.PlayerNotParticipatedException;
 import me.lluiscamino.multiversehardcore.exceptions.WorldIsNotHardcoreException;
 import me.lluiscamino.multiversehardcore.models.PlayerParticipation;
+import me.lluiscamino.multiversehardcore.utils.MessageSender;
 import me.lluiscamino.multiversehardcore.utils.WorldUtils;
 import org.bukkit.GameMode;
 import org.bukkit.World;
@@ -59,9 +60,17 @@ public class PlayerRespawn implements Listener {
                 }
 
                 if (participation.getHcWorld().getConfiguration().isSpectatorMode()) {
+                    String msg = participation.isBannedForever()
+                            ? "You can't play in this world since you died"
+                            : "You can't play in this world now. You'll be able to join again on " + participation.getUnBanDate();
+                    MessageSender.sendNormal(player, msg);
                     player.setGameMode(GameMode.SPECTATOR);
                     log.info("[DEBUG] respawn-enforce: gameMode set → " + player.getGameMode());
                 } else {
+                    String msg = participation.isBannedForever()
+                            ? "You can't play in this world since you died"
+                            : "You can't play in this world now. You'll be able to join again on " + participation.getUnBanDate();
+                    MessageSender.sendNormal(player, msg);
                     WorldUtils.respawnPlayer(player);
                     log.info("[DEBUG] respawn-enforce: respawnPlayer called for " + player.getName());
                 }

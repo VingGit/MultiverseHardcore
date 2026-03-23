@@ -1,5 +1,5 @@
 name: MultiverseHardcore
-version: 2.0.8
+version: 2.0.10
 api-version: "1.21"
 main: me.lluiscamino.multiversehardcore.MultiverseHardcore
 depend: [Multiverse-Core]
